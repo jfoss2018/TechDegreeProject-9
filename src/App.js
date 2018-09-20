@@ -1,18 +1,61 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Header from './components/header.js';
+import Gallery from './components/gallery.js';
+import Nav from './components/nav.js';
+import apiKey from './.config.js';
+
+
+let listItems = [
+  {
+    id: 0,
+    src: "https://farm5.staticflickr.com/4334/37032996241_4c16a9b530.jpg"
+  },
+  {
+    id: 1,
+    src: "https://farm5.staticflickr.com/4342/36338751244_316b6ee54b.jpg"
+  },
+  {
+    id: 2,
+    src: "https://farm5.staticflickr.com/4343/37175099045_0d3a249629.jpg"
+  },
+  {
+    id: 3,
+    src: "https://farm5.staticflickr.com/4425/36337012384_ba3365621e.jpg"
+  }
+];
+
 
 class App extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      photos: []
+    };
+  }
+
+  componentDidMount() {
+    fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${apiKey}&tags=sunsets&per_page=24&format=json&nojsoncallback=1`)
+      .then(response => response.json())
+      .then(response => {
+        this.setState({photos: response.photos.photo});
+      })
+      .catch(error => {
+        console.log('Error fetching data.', error);
+      });
+  }
+
   render() {
+    console.log(this.state.photos);
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className="container">
+        <Header />
+        <Nav />
+        <div className="photo-container">
+          <h2>Results</h2>
+          <Gallery data={this.state.photos} />
+        </div>
+
       </div>
     );
   }
@@ -27,7 +70,7 @@ export default App;
 Build your app components
 ================================================================================
 
-Use the index.html file and mockups as a general guide while you create the
+Use the index.html file and mockups as a general guide while you create the*****************
 components of this project.
 
 Use the src/App.js file as your main container component, where you should
@@ -36,18 +79,18 @@ import your .config file.
 Keep and manage as much of the state and functionality as possible in your
 src/App.js file, and pass data down to reusable stateless components with props.
 
-Create the necessary stateless functional components that focus on the UI and
+Create the necessary stateless functional components that focus on the UI and*****************
 receive data via props. Some examples of the stateless components you could use
 for your app are:
-1. A Header component that could store things like an app title, logo, nav and
+1. A Header component that could store things like an app title, logo, nav and*******************
    search bar. Remember, the mockups and index.html file are a guide for how the
    main components should be laid out, arranged, and positioned, but you can
    personalize your app by adding things like a tittle, logo, footer, etc..
-2. A Nav component for the navigation menu
-3. A single Gallery component that can be reused to display the sets of images
+2. A Nav component for the navigation menu******************************************************
+3. A single Gallery component that can be reused to display the sets of images******************
    for each of the three topic categories you wish to display, like sunsets,
    waterfalls and rainbows, for example.
-4. A single Gallery-item component that can be reused with iteration to display
+4. A single Gallery-item component that can be reused with iteration to display********************
    each list item and image.
 5. Create a form component for the search. Since forms deal with a significant
    amount of unique information that can be very specific to the particular form
@@ -66,19 +109,19 @@ project, try to apply what's in the video to this project.
 Get a Flickr API key
 ================================================================================
 
-Create yahoo account/use tumblr account to sign in.
+Create yahoo account/use tumblr account to sign in.***************************************************
 
-Apply for a non-commercial API key.
+Apply for a non-commercial API key.*******************************************************************
 
-You’ll need to set up a .config.js file in your project that imports your API
+You’ll need to set up a .config.js file in your project that imports your API*************************
 key into your application so that you and other users can request data from the
 Flickr API. This should be imported into src/App.js.
 
-The config.js file should look something like this:
+The config.js file should look something like this:***************************************************
 1. const apiKey = 'YOUR API KEY';
 2. export default apiKey;
 
-Import your API key into your application, preferably into src/App.js, and save
+Import your API key into your application, preferably into src/App.js, and save***********************
 it to a variable like you would any other module, and use the variable where
 applicable. That way, your app’s users will only need to enter in an API key
 once.
